@@ -100,14 +100,14 @@ public class Agent {
 		HashMap<String, String> attr_b = null;
 		for(RavensObject r : a)
 		{
-			if(attr_a == null)
-			attr_a = r.getAttributes();
+			System.out.println(r.getAttributes());
 		}
 		
-		for(String r : attr_b.keySet())
+		for(RavensObject r : b)
 		{
-			attr_b.put(r, attr_b.get(r));
+			System.out.println(r.getAttributes());
 		}
+		
 		System.out.println(attr_a);
 		System.out.println(attr_b);
 		
