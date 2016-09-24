@@ -1,5 +1,6 @@
 package ravensproject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 // Uncomment these lines to access image processing.
@@ -72,11 +73,11 @@ public class Agent {
 				HashMap<String, RavensObject> bObject = _ravensFigure_b.getObjects();
 				HashMap<String, RavensObject> cObject = _ravensFigure_c.getObjects();
 
-				RavensObject ravensObject_a = GetRavensObject(aObject);
-				RavensObject ravensObject_b = GetRavensObject(bObject);
-				RavensObject ravensObject_c = GetRavensObject(cObject);
+				ArrayList<RavensObject> ravensObject_a = GetRavensObject(aObject);
+				ArrayList<RavensObject> ravensObject_b = GetRavensObject(bObject);
+				ArrayList<RavensObject> ravensObject_c = GetRavensObject(cObject);
 
-				System.out.println(problem.getName()+" \n");
+				System.out.println("\n"+problem.getName());
 				CompareAandB(ravensObject_a, ravensObject_b);
 
 			}
@@ -85,21 +86,30 @@ public class Agent {
 		return -1;
 	}
 
-	private RavensObject GetRavensObject(HashMap<String, RavensObject> obj) {
+	private ArrayList<RavensObject> GetRavensObject(HashMap<String, RavensObject> obj) {
+		ArrayList<RavensObject> rList = new ArrayList<>();
 		for (String key : obj.keySet()) {
-			return obj.get(key);
+			RavensObject r = obj.get(key);
+			rList.add(r);
 		}
-		return null;
+		return rList;
 	}
 
-	private void CompareAandB(RavensObject a, RavensObject b) {
-		HashMap<String, String> attr_a = a.getAttributes();
-		HashMap<String, String> attr_b = b.getAttributes();
-		for(String key : attr_a.keySet())
+	private void CompareAandB(ArrayList<RavensObject> a, ArrayList<RavensObject> b) {
+		HashMap<String, String> attr_a = null;
+		HashMap<String, String> attr_b = null;
+		for(RavensObject r : a)
 		{
-			System.out.println(key + " "+ attr_a.get(key));
-			System.out.println("    -------------     ");
+			if(attr_a == null)
+			attr_a = r.getAttributes();
 		}
+		
+		for(String r : attr_b.keySet())
+		{
+			attr_b.put(r, attr_b.get(r));
+		}
+		System.out.println(attr_a);
+		System.out.println(attr_b);
 		
 		//System.out.println("Names : " + a.getName() + " " + b.getName());
 	}
