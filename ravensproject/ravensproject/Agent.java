@@ -29,6 +29,9 @@ public class Agent {
 	private RavensFigure _ravensFigure_a;
 	private RavensFigure _ravensFigure_b;
 	private RavensFigure _ravensFigure_c;
+//	private HashMap<String, RavensObject> _aObject;
+//	private HashMap<String, RavensObject> _bObject;
+//	private HashMap<String, RavensObject> _cObject;
 
 	/**
 	 * The default constructor for your Agent. Make sure to execute any
@@ -73,12 +76,14 @@ public class Agent {
 				HashMap<String, RavensObject> bObject = _ravensFigure_b.getObjects();
 				HashMap<String, RavensObject> cObject = _ravensFigure_c.getObjects();
 
-				ArrayList<RavensObject> ravensObject_a = GetRavensObject(aObject);
-				ArrayList<RavensObject> ravensObject_b = GetRavensObject(bObject);
-				ArrayList<RavensObject> ravensObject_c = GetRavensObject(cObject);
+				CompareObjects(aObject, bObject);
+				
+//				ArrayList<RavensObject> ravensObject_a = GetRavensObject(aObject);
+//				ArrayList<RavensObject> ravensObject_b = GetRavensObject(bObject);
+//				ArrayList<RavensObject> ravensObject_c = GetRavensObject(cObject);
 
 				System.out.println("\n"+problem.getName());
-				CompareAandB(ravensObject_a, ravensObject_b);
+				//CompareAandB(ravensObject_a, ravensObject_b);
 
 			}
 		}
@@ -86,34 +91,61 @@ public class Agent {
 		return -1;
 	}
 
-	private ArrayList<RavensObject> GetRavensObject(HashMap<String, RavensObject> obj) {
-		ArrayList<RavensObject> rList = new ArrayList<>();
-		for (String key : obj.keySet()) {
-			RavensObject r = obj.get(key);
-			rList.add(r);
-		}
-		return rList;
-	}
-
-	private void CompareAandB(ArrayList<RavensObject> a, ArrayList<RavensObject> b) {
-		HashMap<String, String> attr_a = null;
-		HashMap<String, String> attr_b = null;
-		for(RavensObject r : a)
+	private void CompareObjects(HashMap<String, RavensObject> aObject, HashMap<String, RavensObject> bObject)
+	{
+		HashMap<String, String> attr_a = new HashMap<>();
+		HashMap<String, String> attr_b = new HashMap<>();
+		
+		for(String s : aObject.keySet())
 		{
-			System.out.println(r.getAttributes());
+			System.out.print("key "+s+" -> ");
+			RavensObject srObject = aObject.get(s);
+			attr_a = srObject.getAttributes();
+			System.out.println(attr_a);
 		}
 		
-		for(RavensObject r : b)
+		for(String s : bObject.keySet())
 		{
-			System.out.println(r.getAttributes());
+			System.out.print("key "+s+" -> ");
+			RavensObject srObject = bObject.get(s);
+			attr_b = srObject.getAttributes();
+			System.out.println(attr_b);
 		}
 		
-		System.out.println(attr_a);
-		System.out.println(attr_b);
-		
-		//System.out.println("Names : " + a.getName() + " " + b.getName());
+		if(attr_a.keySet().size() == 1)
+		{
+			System.out.println("this is 1 for ");
+		}
 	}
+//	private ArrayList<RavensObject> GetRavensObject(HashMap<String, RavensObject> obj) {
+//		ArrayList<RavensObject> rList = new ArrayList<>();
+//		for (String key : obj.keySet()) {
+//			RavensObject r = obj.get(key);
+//			rList.add(r);
+//		}
+//		return rList;
+//	}
+//
+//	private void CompareAandB(ArrayList<RavensObject> a, ArrayList<RavensObject> b) {
+//		ArrayList<HashMap<String, String>> attr_a = new ArrayList<>();
+//		ArrayList<HashMap<String, String>> attr_b = new ArrayList<>();
+//		for(RavensObject r : a)
+//		{
+//			attr_a.add(r.getAttributes());
+//		}
+//		
+//		for(RavensObject r : b)
+//		{
+//			attr_b.add(r.getAttributes());
+//		}
+//		
+//		
+//	}
 
+	private void GetExpectedResult(ArrayList<HashMap<String, String>> attr_a, ArrayList<HashMap<String, String>> attr_b)
+	{
+		
+	}
 	private void GetFigures() {
 		// get first two and compare attributes .. third one we evaluate for..
 		for (RavensFigure rf : _figures.values()) {
