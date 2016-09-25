@@ -75,7 +75,7 @@ public class Agent {
 				HashMap<String, RavensObject> cObject = _ravensFigure_c.getObjects();
 
 				System.out.println("\n"+problem.getName());
-				System.out.println(CompareObjects(aObject, bObject, cObject));
+				//System.out.println("Answer is "+CompareObjects(aObject, bObject, cObject));
 				return CompareObjects(aObject, bObject, cObject);
 			}
 		}
@@ -95,7 +95,7 @@ public class Agent {
 		System.out.println(attr_a);
 		System.out.println(attr_b);
 		System.out.println(attr_c);
-		return GetExpectedResult(attr_a, attr_b);
+		return GetExpectedResult(attr_a, attr_b, attr_c);
 	}
 	
 	private ArrayList<HashMap<String, String>> SetAttr(HashMap<String, RavensObject> rObject)
@@ -109,19 +109,20 @@ public class Agent {
 		return attr;
 	}
 
-	private int GetExpectedResult(ArrayList<HashMap<String, String>> attr_a, ArrayList<HashMap<String, String>> attr_b)
+	private int GetExpectedResult(ArrayList<HashMap<String, String>> attr_a, ArrayList<HashMap<String, String>> attr_b, ArrayList<HashMap<String, String>> attr_c)
 	{
 		int ans = -1;
 		for(int i = 0; i < attr_a.size(); i++)
 		{
 			HashMap<String, String> aHash = attr_a.get(i);
 			HashMap<String, String>  bHash = attr_b.get(i);
-			ans = Sort(aHash, bHash);
+			HashMap<String, String>  cHash = attr_c.get(i);
+			ans = Sort(aHash, bHash, cHash);
 		}
 		return ans;
 	}
 	
-	private int Sort(HashMap<String, String> aHash, HashMap<String, String> bHash)
+	private int Sort(HashMap<String, String> aHash, HashMap<String, String> bHash, HashMap<String, String> cHash)
 	{
 		HashMap<String, String> same = new HashMap<>();
 		HashMap<String, String> diff = new HashMap<>();
@@ -135,7 +136,10 @@ public class Agent {
 				}
 				else
 				{
-					diff.put(akey, bHash.get(akey));
+					String aDiff = aHash.get(akey);
+					String bDiff = bHash.get(akey);
+					String cDiff = cHash.get(akey);
+					diff.put(akey, GetRightProp(akey, aDiff,bDiff,cDiff));
 				}
 			}
 		}
@@ -145,9 +149,56 @@ public class Agent {
 		return GetResult(same, diff);
 	}
 	
+	private String GetRightProp(String key, String a, String b, String c)
+	{
+		System.out.println(a+" "+b+" "+c);
+		String rst = "";
+		if(a.equals(c))
+		{
+			return b;
+		}else if(a.equals(b))
+		{
+			return c;
+		}
+		else
+		{
+			if(key.equals("alignment"))
+			{
+				String [] aArr = a.split("-");
+				String [] bArr = b.split("-");
+				String [] cArr = c.split("-");
+				String [] dArr = new String[cArr.length];
+				for(int i = 0; i < aArr.length; i++)
+				{
+					if(aArr[i].equals(bArr[i]))
+					{
+						dArr [i]=cArr[i];
+					}
+					else
+					{
+						dArr[i]=bArr[i];
+					}
+				}
+				rst = dArr[0]+"-"+dArr[1];
+			}else if(key.equals("inside") || key.equals("above"))
+			{
+				
+			}else if(key.equals("angle")) // we know angle is a num
+			{
+				int aAng = Integer.parseInt(a);
+				int bAng = Integer.parseInt(b);
+				int cAng = Integer.parseInt(c);
+				rst = String.valueOf(cAng - (bAng - aAng));
+			}
+		}
+		
+		return rst;
+	}
+	
 	private int GetResult(HashMap<String, String> same, HashMap<String, String> diff)
 	{
 		int ans = -1;
+		ArrayList<RavensFigure> pFigures = new ArrayList<>();
 		for(RavensFigure rf : _answers.values())
 		{
 			HashMap<String, RavensObject> object = rf.getObjects();
@@ -155,16 +206,65 @@ public class Agent {
 			{
 				RavensObject sObject = object.get(s);
 				HashMap<String, String> attr = sObject.getAttributes();
-				if(diff.isEmpty())
+				if(isContainMap(same, attr))
 				{
-					if(same.equals(attr))
+					pFigures.add(rf);
+					System.out.println("This guys is potential "+rf.getName());
+					if(diff.isEmpty())
 					{
 						ans = Integer.parseInt(rf.getName());
 					}
 				}
 			}
 		}
+		
+		if(ans == -1)
+		{
+			ans = EvaluatePotential(pFigures, same, diff);
+		}
+		System.out.println("MyAnswer "+ans);
 		return ans;
+	}
+	
+	private int EvaluatePotential(ArrayList<RavensFigure> potentials, HashMap<String, String> same, HashMap<String, String> diff)
+	{		
+		same.putAll(diff);
+		System.out.println("new same "+same);
+		diff = new HashMap<>();
+		for(RavensFigure rf : potentials)
+		{
+			HashMap<String, RavensObject> object = rf.getObjects();
+			for(String s : object.keySet())
+			{
+				RavensObject sObject = object.get(s);
+				HashMap<String, String> attr = sObject.getAttributes();
+				if(isContainMap(same, attr))
+				{
+					return Integer.parseInt(rf.getName());
+				}
+			}
+		}
+		return -1;
+	}
+	
+	private boolean isContainMap(HashMap<String, String> same, HashMap<String, String> attr)
+	{
+		boolean containsAll = false;
+		for(String key : same.keySet())
+		{
+			if(attr.containsKey(key))
+			{
+				if(same.get(key).equals(attr.get(key)))
+				{
+					containsAll = true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		return containsAll;
 	}
 	
 	private void GetFigures() {
