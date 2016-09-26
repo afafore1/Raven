@@ -128,7 +128,7 @@ public class Agent {
 		HashMap<String, String> diff = new HashMap<>();
 		for(String akey : aHash.keySet())
 		{
-			if(bHash.containsKey(akey))
+			if(bHash.containsKey(akey) && cHash.containsKey(akey))
 			{
 				if(aHash.get(akey).equals(bHash.get(akey)))
 				{
@@ -159,6 +159,9 @@ public class Agent {
 		}else if(a.equals(b))
 		{
 			return c;
+		}else if(b.equals(c))
+		{
+			return a;
 		}
 		else
 		{
@@ -182,7 +185,18 @@ public class Agent {
 				rst = dArr[0]+"-"+dArr[1];
 			}else if(key.equals("inside") || key.equals("above"))
 			{
-				
+				for(RavensFigure rf : _answers.values())
+				{
+					HashMap<String, RavensObject> obj = rf.getObjects();
+					for(String s : obj.keySet())
+					{
+						RavensObject sObject = obj.get(s);
+						HashMap<String, String> attr = sObject.getAttributes();
+						
+						rst = s;
+						break;
+					}
+				}
 			}else if(key.equals("angle")) // we know angle is a num
 			{
 				int aAng = Integer.parseInt(a);
@@ -236,6 +250,7 @@ public class Agent {
 			HashMap<String, RavensObject> object = rf.getObjects();
 			for(String s : object.keySet())
 			{
+				System.out.println("inside ?? "+s);
 				RavensObject sObject = object.get(s);
 				HashMap<String, String> attr = sObject.getAttributes();
 				if(isContainMap(same, attr))
