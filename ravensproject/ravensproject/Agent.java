@@ -132,7 +132,7 @@ public class Agent {
 			{
 				if(aHash.get(akey).equals(bHash.get(akey)))
 				{
-					same.put(akey, aHash.get(akey));
+					same.put(akey, cHash.get(akey));
 				}
 				else
 				{
@@ -151,7 +151,6 @@ public class Agent {
 	
 	private String GetRightProp(String key, String a, String b, String c)
 	{
-		System.out.println(a+" "+b+" "+c);
 		String rst = "";
 		if(a.equals(c))
 		{
@@ -188,11 +187,12 @@ public class Agent {
 				for(RavensFigure rf : _answers.values())
 				{
 					HashMap<String, RavensObject> obj = rf.getObjects();
+					//System.out.println("this obj "+obj);
 					for(String s : obj.keySet())
 					{
 						RavensObject sObject = obj.get(s);
 						HashMap<String, String> attr = sObject.getAttributes();
-						
+						//System.out.println(s+" is inside ");
 						rst = s;
 						break;
 					}
