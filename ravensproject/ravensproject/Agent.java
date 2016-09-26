@@ -137,9 +137,13 @@ public class Agent {
 			{
 				if(c < bSize)
 				{
-					bHash = attr_c.get(c);
+					cHash = attr_c.get(c);
 					c++;
 				}
+			}
+			if(bSize < attr_a.size())
+			{
+				return Sort(aHash, bHash, cHash);
 			}
 			ans = Sort(aHash, bHash, cHash);
 		}
@@ -178,6 +182,7 @@ public class Agent {
 		String rst = "";
 		if(a.equals(c))
 		{
+			if(b.isEmpty()) return a;
 			return b;
 		}else if(a.equals(b))
 		{
@@ -219,7 +224,6 @@ public class Agent {
 						{
 							rst = attr.get(key);
 						}
-						System.out.println("This is attr "+attr);
 						break;
 					}
 				}
