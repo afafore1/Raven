@@ -22,7 +22,6 @@ import java.util.HashMap;
  */
 public class Agent {
 	private String _name;
-	private String _problemType;
 	private HashMap<String, RavensFigure> _figures;
 	private HashMap<String, RavensFigure> _answers = new HashMap<String,RavensFigure>();
 	private boolean _isVerbal;
@@ -60,7 +59,6 @@ public class Agent {
 	 */
 	public int Solve(RavensProblem problem) {
 		_name = problem.getName();
-		_problemType = problem.getProblemType();
 		_figures = problem.getFigures();
 		_isVerbal = problem.hasVerbal();
 		_ravenspair = new HashMap<>(); // this should give us a pair of match
@@ -75,7 +73,6 @@ public class Agent {
 				HashMap<String, RavensObject> cObject = _ravensFigure_c.getObjects();
 
 				System.out.println("\n"+problem.getName());
-				//System.out.println("Answer is "+CompareObjects(aObject, bObject, cObject));
 				return CompareObjects(aObject, bObject, cObject);
 			}
 		}
@@ -187,13 +184,15 @@ public class Agent {
 				for(RavensFigure rf : _answers.values())
 				{
 					HashMap<String, RavensObject> obj = rf.getObjects();
-					//System.out.println("this obj "+obj);
 					for(String s : obj.keySet())
 					{
 						RavensObject sObject = obj.get(s);
 						HashMap<String, String> attr = sObject.getAttributes();
-						//System.out.println(s+" is inside ");
-						rst = s;
+						if(attr.containsKey(key))
+						{
+							rst = attr.get(key);
+						}
+						System.out.println("This is attr "+attr);
 						break;
 					}
 				}
