@@ -109,11 +109,38 @@ public class Agent {
 	private int GetExpectedResult(ArrayList<HashMap<String, String>> attr_a, ArrayList<HashMap<String, String>> attr_b, ArrayList<HashMap<String, String>> attr_c)
 	{
 		int ans = -1;
+		int bSize = attr_b.size();
+		int cSize = attr_c.size();
+		int b = 0;
+		int c = 0;
 		for(int i = 0; i < attr_a.size(); i++)
 		{
 			HashMap<String, String> aHash = attr_a.get(i);
-			HashMap<String, String>  bHash = attr_b.get(i);
-			HashMap<String, String>  cHash = attr_c.get(i);
+			HashMap<String, String>  bHash = new HashMap<>();
+			HashMap<String, String>  cHash = new HashMap<>();
+			if(bSize == attr_a.size())
+			{
+				bHash = attr_b.get(i);
+			}
+			else
+			{
+				if(b < bSize)
+				{
+					bHash = attr_b.get(b);
+					b++;
+				}
+			}
+			if(cSize == attr_a.size())
+			{
+				cHash = attr_c.get(i);
+			}else
+			{
+				if(c < bSize)
+				{
+					bHash = attr_c.get(c);
+					c++;
+				}
+			}
 			ans = Sort(aHash, bHash, cHash);
 		}
 		return ans;
@@ -249,7 +276,6 @@ public class Agent {
 			HashMap<String, RavensObject> object = rf.getObjects();
 			for(String s : object.keySet())
 			{
-				System.out.println("inside ?? "+s);
 				RavensObject sObject = object.get(s);
 				HashMap<String, String> attr = sObject.getAttributes();
 				if(isContainMap(same, attr))
